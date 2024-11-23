@@ -12,24 +12,21 @@ import { UserIcon } from '@heroicons/react/24/solid';
 import { useNavigate } from 'react-router-dom';
 
 export default function Navbar() {
-  const { user, setUser } = useAuth(); // Récupérer et mettre à jour l'état utilisateur
+  const { user, setUser } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
       const response = await fetch(`${BACKEND_URL}/api/auth/logout`, {
         method: 'POST',
-        credentials: 'include', // Inclut les cookies dans la requête
+        credentials: 'include',
       });
 
       if (!response.ok) {
         throw new Error('Échec lors de la déconnexion');
       }
 
-      // Réinitialiser l'état utilisateur dans le contexte
       setUser(null);
-
-      // Rediriger vers la page de connexion
       navigate('/login');
     } catch (error) {
       console.error('Erreur lors de la déconnexion :', error.message);
@@ -46,37 +43,34 @@ export default function Navbar() {
 
         {/* Navigation Links */}
         <div className="hidden md:flex space-x-8">
-          <a href="/jobs" className="text-white hover:text-primary">
+          <a href="/news" className="text-white hover:text-primary flex items-center gap-2">
             Actualités
           </a>
-          <a href="/about" className="text-white hover:text-primary">
+          <a href="/offers" className="text-white hover:text-primary flex items-center gap-2">
             Offres
           </a>
-          <a href="/contact" className="text-white hover:text-primary">
+          <a href="/cv" className="text-white hover:text-primary flex items-center gap-2">
             CV
+          </a>
+          <a href="/create-cv" className="text-white hover:text-primary flex items-center gap-2">
+            Créer un CV
           </a>
         </div>
 
-        {/* User Profile or Call to Action */}
+        {/* User Profile */}
         <div className="space-x-4 flex items-center">
           {user ? (
             <Dropdown>
               <DropdownTrigger>
                 <div className="flex items-center space-x-3 cursor-pointer">
-                  {/* Prénom et nom */}
                   <span className="text-white font-medium">
                     {user.firstname} {user.lastname}
                   </span>
-                  {/* Avatar */}
                   <Avatar
                     src={user.avatar || ''}
                     alt="Profile"
                     className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center"
-                    icon={
-                      !user.avatar && (
-                        <UserIcon className="h-5 w-5 text-gray-600" />
-                      )
-                    }
+                    icon={!user.avatar && <UserIcon className="h-5 w-5 text-gray-600" />}
                   />
                 </div>
               </DropdownTrigger>
