@@ -1,12 +1,12 @@
-import './assets/css/index.css';
-import AppRoutes from './routes/routes';
-
+import React from 'react';
+import { AuthProvider } from './context/AuthContext'; // Assurez-vous du bon chemin
+import Routes from './routes/routes'; // Votre fichier de routes principal
 
 function App() {
   return (
-    <div className="App">
-      <AppRoutes />
-    </div>
+    <AuthProvider>
+      <Routes />
+    </AuthProvider>
   );
 }
 

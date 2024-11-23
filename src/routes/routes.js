@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from '../context/AuthContext';
 import { ProtectedRoute } from '../context/ProtectedRoute';
-import Home from '../pages/home';
-import Login from '../pages/login';
-import Register from '../pages/register';
+import Home from '../pages/home/home';
+import Login from '../pages/authentification/login';
+import Register from '../pages/authentification/register';
 
 export default function AppRoutes() {
   return (

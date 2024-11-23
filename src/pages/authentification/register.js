@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Input, Button, CardHeader, CardBody, CardFooter, Divider } from '@nextui-org/react';
 import { useNavigate } from 'react-router-dom'; // Utiliser useNavigate pour la redirection
-import { BACKEND_URL } from '../config/config';
+import { BACKEND_URL } from '../../config/config';
 
 export default function Register() {
   const [firstname, setFirstname] = useState('');
@@ -57,7 +57,6 @@ export default function Register() {
       }
 
       const loginData = await loginResponse.json();
-      console.log('Login successful:', loginData);
 
       // Redirection vers la page Home après connexion
       navigate('/');

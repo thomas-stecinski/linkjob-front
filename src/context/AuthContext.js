@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { BACKEND_URL } from '../config/config';
 
 const AuthContext = createContext();
 
@@ -9,26 +10,25 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/auth/me', {
+        const response = await fetch(`${BACKEND_URL}/api/auth/me`, {
           method: 'GET',
-          credentials: 'include', // Inclut les cookies dans la requête
+          credentials: 'include',
         });
 
         if (!response.ok) {
-          throw new Error('Failed to fetch user');
+          throw new Error('Not authenticated');
         }
 
         const data = await response.json();
-        setUser(data.user); // Définit l'utilisateur
+        setUser(data.user);
       } catch (error) {
-        console.error('Error fetching user:', error.message);
-        setUser(null); // Pas d'utilisateur authentifié
+        setUser(null);
       } finally {
-        setLoading(false); // Chargement terminé
+        setLoading(false);
       }
     };
 
-    fetchUser(); // Appelle la fonction pour charger l'utilisateur
+    fetchUser();
   }, []);
 
   return (

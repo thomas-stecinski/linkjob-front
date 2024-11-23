@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Card, Input, Button, CardHeader, CardBody, CardFooter, Divider } from '@nextui-org/react';
 import { useNavigate } from 'react-router-dom';
-import { BACKEND_URL } from '../config/config';
+import { BACKEND_URL } from '../../config/config';
+import { useAuth } from '../../context/AuthContext';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const { setUser } = useAuth();
 
   const navigate = useNavigate(); // Initialisation du hook
 
@@ -15,32 +17,35 @@ export default function Login() {
     e.preventDefault();
     setError('');
     setLoading(true);
-
+  
     try {
-        const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }),
-            credentials: 'include', // Inclut les cookies dans la requête
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Login failed');
-        }
-
-        const data = await response.json();
-
-        navigate('/'); // Redirection vers la page Home
+      const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+        credentials: 'include', // Inclut les cookies dans la requête
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
+      }
+  
+      const data = await response.json();
+  
+      // Met à jour l'état utilisateur
+      setUser(data.user);
+  
+      navigate('/'); // Redirige vers la page d'accueil
     } catch (err) {
-        console.error('Error during login:', err.message);
-        setError(err.message);
+      console.error('Error during login:', err.message);
+      setError(err.message);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
 
   
 
