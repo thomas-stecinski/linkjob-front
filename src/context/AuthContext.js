@@ -1,22 +1,38 @@
-import { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const AuthContext = createContext(null);
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const login = (userData) => {
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
-  };
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/api/auth/me', {
+          method: 'GET',
+          credentials: 'include', // Inclut les cookies dans la requête
+        });
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
-  };
+        if (!response.ok) {
+          throw new Error('Failed to fetch user');
+        }
+
+        const data = await response.json();
+        setUser(data.user); // Définit l'utilisateur
+      } catch (error) {
+        console.error('Error fetching user:', error.message);
+        setUser(null); // Pas d'utilisateur authentifié
+      } finally {
+        setLoading(false); // Chargement terminé
+      }
+    };
+
+    fetchUser(); // Appelle la fonction pour charger l'utilisateur
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, setUser }}>
       {children}
     </AuthContext.Provider>
   );

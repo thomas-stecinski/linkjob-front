@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Input, Button, CardHeader, CardBody, CardFooter, Divider } from '@nextui-org/react';
+import { useNavigate } from 'react-router-dom';
 import { BACKEND_URL } from '../config/config';
 
 export default function Login() {
@@ -8,35 +9,43 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate(); // Initialisation du hook
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
     try {
-      const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
+        const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+            credentials: 'include', // Inclut les cookies dans la requête
+        });
 
-      if (!response.ok) {
-        throw new Error('Login failed');
-      }
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Login failed');
+        }
 
-      const data = await response.json();
-      window.location.href = '/';
-      
+        const data = await response.json();
+
+        navigate('/'); // Redirection vers la page Home
     } catch (err) {
-      setError(err.message);
+        console.error('Error during login:', err.message);
+        setError(err.message);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
+};
+
+  
+
+  const handleSignUpRedirect = () => {
+    navigate('/register'); // Redirection vers la page d'inscription
   };
 
   return (
@@ -48,7 +57,7 @@ export default function Login() {
             <p className="text-default-500">Please login to continue</p>
           </div>
         </CardHeader>
-        <Divider/>
+        <Divider />
         <CardBody className="gap-4">
           <Input
             label="Email"
@@ -69,16 +78,16 @@ export default function Login() {
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <div className="flex justify-between items-center">
             <label className="text-sm">
-              <input type="checkbox" className="mr-2"/>
+              <input type="checkbox" className="mr-2" />
               Remember me
             </label>
             <a href="#" className="text-sm text-primary">Forgot password?</a>
           </div>
         </CardBody>
         <CardFooter className="flex flex-col gap-3">
-          <Button 
-            color="primary" 
-            className="w-full" 
+          <Button
+            color="primary"
+            className="w-full"
             size="lg"
             onClick={handleLogin}
             isLoading={loading}
@@ -86,7 +95,10 @@ export default function Login() {
             Sign In
           </Button>
           <div className="text-center text-sm">
-            Don't have an account? <a href="#" className="text-primary">Sign up</a>
+            Don't have an account?{' '}
+            <a onClick={handleSignUpRedirect} className="text-primary cursor-pointer">
+              Sign up
+            </a>
           </div>
         </CardFooter>
       </Card>
