@@ -1,6 +1,6 @@
 import React from 'react';
 import Navbar from '../../components/Navbar';
-import { Card, CardBody, Button, Image } from '@nextui-org/react';
+import { Card, CardBody, Button, Image} from '@nextui-org/react';
 
 export default function Home() {
   return (

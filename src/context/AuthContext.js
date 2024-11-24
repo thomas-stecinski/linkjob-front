@@ -5,10 +5,11 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [hasCV, setHasCV] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchUserData = async () => {
       try {
         const response = await fetch(`${BACKEND_URL}/api/auth/me`, {
           method: 'GET',
@@ -21,18 +22,27 @@ export const AuthProvider = ({ children }) => {
 
         const data = await response.json();
         setUser(data.user);
+        
+        // Fetch CV status along with user data
+        if (data.user) {
+          const cvResponse = await fetch(`${BACKEND_URL}/api/cv/get-cv/${data.user.userid}`, {
+            credentials: 'include'
+          });
+          setHasCV(cvResponse.ok);
+        }
       } catch (error) {
         setUser(null);
+        setHasCV(false);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUser();
+    fetchUserData();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, setUser }}>
+    <AuthContext.Provider value={{ user, loading, setUser, hasCV, setHasCV }}>
       {children}
     </AuthContext.Provider>
   );

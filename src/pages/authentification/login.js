@@ -11,7 +11,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const { setUser } = useAuth();
 
-  const navigate = useNavigate(); // Initialisation du hook
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -25,7 +25,7 @@ export default function Login() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
-        credentials: 'include', // Inclut les cookies dans la requête
+        credentials: 'include',
       });
   
       if (!response.ok) {
@@ -54,12 +54,12 @@ export default function Login() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-violet-500 to-fuchsia-500">
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-500 to-blue-900">
       <Card className="w-full max-w-md p-4 bg-background/60 dark:bg-default-100/50 backdrop-blur-md">
         <CardHeader className="flex flex-col gap-3">
           <div className="flex flex-col items-center">
-            <h1 className="text-2xl font-bold">Welcome to LinkJob</h1>
-            <p className="text-default-500">Please login to continue</p>
+            <h1 className="text-2xl font-bold">Bienvenue sur LinkJob</h1>
+            <p className="text-default-500">Veuillez vous connecter pour continuer</p>
           </div>
         </CardHeader>
         <Divider />
@@ -67,7 +67,7 @@ export default function Login() {
           <Input
             label="Email"
             type="email"
-            placeholder="Enter your email"
+            placeholder="Entrez votre email"
             variant="bordered"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -75,7 +75,7 @@ export default function Login() {
           <Input
             label="Password"
             type="password"
-            placeholder="Enter your password"
+            placeholder="Entrez votre mot de passe"
             variant="bordered"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -84,9 +84,9 @@ export default function Login() {
           <div className="flex justify-between items-center">
             <label className="text-sm">
               <input type="checkbox" className="mr-2" />
-              Remember me
+              Se souvenir de moi
             </label>
-            <a href="#" className="text-sm text-primary">Forgot password?</a>
+            <a href="#" className="text-sm text-primary">Mot de passe oublié?</a>
           </div>
         </CardBody>
         <CardFooter className="flex flex-col gap-3">
@@ -97,12 +97,12 @@ export default function Login() {
             onClick={handleLogin}
             isLoading={loading}
           >
-            Sign In
+            Se connecter
           </Button>
           <div className="text-center text-sm">
             Don't have an account?{' '}
             <a onClick={handleSignUpRedirect} className="text-primary cursor-pointer">
-              Sign up
+              S'inscrire
             </a>
           </div>
         </CardFooter>

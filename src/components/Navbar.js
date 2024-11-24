@@ -7,12 +7,13 @@ import {
   DropdownMenu,
   DropdownItem,
   Avatar,
+  Button,
 } from '@nextui-org/react';
 import { UserIcon } from '@heroicons/react/24/solid';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function Navbar() {
-  const { user, setUser } = useAuth();
+  const { user, hasCV, setUser } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -34,31 +35,64 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-gray-800 backdrop-blur-md sticky top-0 z-50">
+    <nav className="bg-gray-800 backdrop-blur-md sticky top-0 z-50 w-full">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
-        <div className="text-xl font-bold text-white">
-          <a href="/">LinkJob</a>
+        <div className="text-xl font-bold text-white w-[200px]">
+          <Link to="/">LinkJob</Link>
         </div>
 
         {/* Navigation Links */}
-        <div className="hidden md:flex space-x-8">
-          <a href="/news" className="text-white hover:text-primary flex items-center gap-2">
+        <div className="hidden md:flex items-center justify-center flex-1 space-x-4">
+          <Button
+            as={Link}
+            to="/news"
+            variant="light"
+            className="text-white w-[120px]"
+          >
             Actualités
-          </a>
-          <a href="/offers" className="text-white hover:text-primary flex items-center gap-2">
+          </Button>
+          <Button
+            as={Link}
+            to="/offers"
+            variant="light"
+            className="text-white w-[120px]"
+          >
             Offres
-          </a>
-          <a href="/cv" className="text-white hover:text-primary flex items-center gap-2">
-            CV
-          </a>
-          <a href="/create-cv" className="text-white hover:text-primary flex items-center gap-2">
-            Créer un CV
-          </a>
+          </Button>
+          <Button
+            as={Link}
+            to="/cv"
+            variant="light"
+            className="text-white w-[120px]"
+          >
+            CVthèque
+          </Button>
+          <Dropdown>
+            <DropdownTrigger>
+              <Button 
+                variant="light"
+                className="text-white w-[120px]"
+              >
+                Mon CV
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu>
+              {hasCV ? (
+                <DropdownItem key="view-cv" onPress={() => navigate(`/cv/${user?.userid}`)}>
+                  Voir mon CV
+                </DropdownItem>
+              ) : (
+                <DropdownItem key="create-cv" onPress={() => navigate('/create-cv')}>
+                  Créer mon CV
+                </DropdownItem>
+              )}
+            </DropdownMenu>
+          </Dropdown>
         </div>
 
         {/* User Profile */}
-        <div className="space-x-4 flex items-center">
+        <div className="flex items-center justify-end w-[200px]">
           {user ? (
             <Dropdown>
               <DropdownTrigger>
@@ -82,18 +116,22 @@ export default function Navbar() {
             </Dropdown>
           ) : (
             <>
-              <a
-                href="/login"
-                className="text-primary border border-primary px-4 py-2 rounded-md hover:bg-primary hover:text-white transition"
+              <Button
+                as={Link}
+                to="/login"
+                variant="bordered"
+                className="text-primary border-primary hover:bg-primary hover:text-white"
               >
                 Connexion
-              </a>
-              <a
-                href="/register"
-                className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition"
+              </Button>
+              <Button
+                as={Link}
+                to="/register"
+                color="primary"
+                className="hover:bg-primary/90"
               >
                 Inscription
-              </a>
+              </Button>
             </>
           )}
         </div>

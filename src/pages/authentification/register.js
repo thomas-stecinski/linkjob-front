@@ -69,12 +69,12 @@ export default function Register() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-violet-500 to-fuchsia-500">
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-500 to-blue-900">
       <Card className="w-full max-w-md p-4 bg-background/60 dark:bg-default-100/50 backdrop-blur-md">
         <CardHeader className="flex flex-col gap-3">
           <div className="flex flex-col items-center">
-            <h1 className="text-2xl font-bold">Create an Account</h1>
-            <p className="text-default-500">Please fill the form to register</p>
+            <h1 className="text-2xl font-bold">Créer un compte</h1>
+            <p className="text-default-500">Veuillez remplir le formulaire pour vous inscrire</p>
           </div>
         </CardHeader>
         <Divider />
@@ -82,7 +82,7 @@ export default function Register() {
           <Input
             label="First Name"
             type="text"
-            placeholder="Enter your first name"
+            placeholder="Entrez votre prénom"
             variant="bordered"
             value={firstname}
             onChange={(e) => setFirstname(e.target.value)}
@@ -90,7 +90,7 @@ export default function Register() {
           <Input
             label="Last Name"
             type="text"
-            placeholder="Enter your last name"
+            placeholder="Entrez votre nom"
             variant="bordered"
             value={lastname}
             onChange={(e) => setLastname(e.target.value)}
@@ -98,7 +98,7 @@ export default function Register() {
           <Input
             label="Email"
             type="email"
-            placeholder="Enter your email"
+            placeholder="Entrez votre email"
             variant="bordered"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -106,7 +106,7 @@ export default function Register() {
           <Input
             label="Password"
             type="password"
-            placeholder="Enter your password"
+            placeholder="Entrez votre mot de passe"
             variant="bordered"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -121,10 +121,10 @@ export default function Register() {
             onClick={handleRegister}
             isLoading={loading}
           >
-            Register
+            S'inscrire
           </Button>
           <div className="text-center text-sm">
-            Already have an account? <a href="/login" className="text-primary">Login</a>
+            Vous avez déjà un compte? <a href="/login" className="text-primary">Se connecter</a>
           </div>
         </CardFooter>
       </Card>
