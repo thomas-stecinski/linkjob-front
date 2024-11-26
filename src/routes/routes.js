@@ -9,6 +9,7 @@ import GetCV from '../pages/CV/GetCV';
 import CreateCV from '../pages/CV/CreateCV'; 
 // import Offers from '../pages/offers/Offers';
 // import News from '../pages/news/News'; 
+import EditCV from '../pages/CV/EditCV';
 
 export default function AppRoutes() {
   return (
@@ -49,6 +50,14 @@ export default function AppRoutes() {
             element={
               <ProtectedRoute>
                 <CreateCV />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/edit-cv/:userid"
+            element={
+              <ProtectedRoute>
+                <EditCV />
               </ProtectedRoute>
             }
           />
