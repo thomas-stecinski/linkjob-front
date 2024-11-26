@@ -7,13 +7,15 @@ import {
   Button,
   Skeleton,
   Avatar,
-  Divider
+  Divider,
+  Chip
 } from '@nextui-org/react';
 import { MapPinIcon, BriefcaseIcon } from '@heroicons/react/24/outline';
 import { BACKEND_URL } from '../../config/config';
 import Navbar from '../../components/Navbar';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useAuth } from '../../context/AuthContext';
 
 
 // Wrap Card with motion
@@ -23,6 +25,7 @@ export default function ViewCVs() {
   const [cvs, setCvs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchCVs = async () => {
@@ -107,7 +110,12 @@ export default function ViewCVs() {
                     isBordered
                   />
                   <div className="flex flex-col">
-                    <p className="text-xl font-bold">{cv.firstname} {cv.lastname}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-xl font-bold">{cv.firstname} {cv.lastname}</p>
+                      {user && cv.userid === user.userid && (
+                        <Chip color="primary" size="sm">Mon CV</Chip>
+                      )}
+                    </div>
                     <p className="text-small text-default-500 flex items-center gap-1">
                       <BriefcaseIcon className="h-4 w-4" />
                       {cv.title}
