@@ -1,2 +1,3 @@
-export const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
-console.log('Backend URL:', process.env.REACT_APP_BACKEND_URL); // For debugging
+export const BACKEND_URL = process.env.NODE_ENV === 'production'
+    ? 'https://linkjob-back.onrender.com'
+    : 'http://localhost:8000';
