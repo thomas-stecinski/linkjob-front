@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BACKEND_URL } from '../config/config';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -15,6 +15,7 @@ import { useNavigate, Link } from 'react-router-dom';
 export default function Navbar() {
   const { user, hasCV, setUser } = useAuth();
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -42,8 +43,31 @@ export default function Navbar() {
           <Link to="/">LinkJob</Link>
         </div>
 
-        {/* Navigation Links */}
-        <div className="hidden md:flex items-center justify-center flex-1 space-x-4">
+        {/* Hamburger Icon */}
+        <div className="md:hidden flex items-center">
+          <button
+            className="text-white"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        </div>
+
+        {/* Navigation Links (for larger screens) */}
+        <div className={`md:flex items-center justify-center flex-1 space-x-4 ${isMenuOpen ? 'block' : 'hidden'}`}>
           <Button
             as={Link}
             to="/news"
@@ -70,23 +94,18 @@ export default function Navbar() {
           </Button>
           <Dropdown>
             <DropdownTrigger>
-              <Button 
-                variant="light"
-                className="text-white w-[120px]"
-              >
+              <Button variant="light" className="text-white w-[120px]">
                 Mon CV
               </Button>
             </DropdownTrigger>
             <DropdownMenu>
-              {hasCV ? (
-                <DropdownItem key="view-cv" onPress={() => navigate(`/cv/${user?.userid}`)}>
-                  Voir mon CV
-                </DropdownItem>
-              ) : (
-                <DropdownItem key="create-cv" onPress={() => navigate('/create-cv')}>
-                  Créer mon CV
-                </DropdownItem>
-              )}
+              {/* Always display both options */}
+              <DropdownItem key="view-cv" onPress={() => navigate(`/cv/${user?.userid}`)}>
+                Voir mon CV
+              </DropdownItem>
+              <DropdownItem key="create-cv" onPress={() => navigate('/create-cv')}>
+                Créer mon CV
+              </DropdownItem>
             </DropdownMenu>
           </Dropdown>
         </div>
