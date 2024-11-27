@@ -23,6 +23,9 @@ import { useState, useEffect, useRef } from "react";
 import { PencilIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const ShowCV = () => {
   const [cv, setCV] = useState(null);
@@ -32,7 +35,8 @@ const ShowCV = () => {
   const { user } = useAuth();
   const userid = user?.userid;
   const requestedUserid = useParams().userid;
-  const recommendationsEndRef = useRef(null);
+  const recommendationsContainerRef = useRef(null); // Ref pour le conteneur
+  const [editingRecommendation, setEditingRecommendation] = useState(null);
 
   const isOwner = userid === cv?.userid;
 
@@ -83,19 +87,61 @@ const ShowCV = () => {
   }, [requestedUserid]);
 
   const scrollToBottom = () => {
-    if (recommendationsEndRef.current) {
-      recommendationsEndRef.current.scrollIntoView({ behavior: "smooth" });
+    if (recommendationsContainerRef.current) {
+      recommendationsContainerRef.current.scrollTo({
+        top: recommendationsContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
     }
   };
 
-  const handleAddRecommendation = async (e) => {
+  const handleEditRecommendation = async (e, id) => {
     e.preventDefault();
-
-    if (!newRecommendation.trim()) {
-      alert("Veuillez saisir une recommandation valide.");
+  
+    const updatedText = recommendations.find((rec) => rec._id === id)?.text;
+  
+    if (!updatedText.trim()) {
+      toast.error("Veuillez saisir un texte valide.");
       return;
     }
+  
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/recommendation/edit/${id}`, {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: updatedText }),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Erreur lors de la modification.");
+      }
+  
+      const data = await response.json();
+      setRecommendations((prev) =>
+        prev.map((rec) =>
+          rec._id === id ? { ...rec, text: data.recommendation.text } : rec
+        )
+      );
+      toast.success("Recommandation modifiée avec succès !");
+      setEditingRecommendation(null);
+    } catch (err) {
+      toast.error(err.message || "Une erreur s'est produite.");
+      console.error("Erreur lors de la modification :", err.message);
+    }
+  };
+  
+  
 
+  const handleAddRecommendation = async (e) => {
+    e.preventDefault();
+  
+    if (!newRecommendation.trim()) {
+      toast.error("Veuillez saisir une recommandation valide.");
+      return;
+    }
+  
     try {
       const response = await fetch(
         `${BACKEND_URL}/api/recommendation/add-recommendation`,
@@ -109,27 +155,23 @@ const ShowCV = () => {
           }),
         }
       );
-
+  
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(
-          errorData.message || "Erreur lors de l'ajout de la recommandation"
-        );
+        throw new Error(errorData.message || "Erreur lors de l'ajout.");
       }
-
+  
       const data = await response.json();
-
       setRecommendations((prev) => [...prev, data.recommendation]);
-
-      setTimeout(() => {
-        scrollToBottom();
-      }, 100);
-
+      toast.success("Recommandation ajoutée avec succès !");
+      setTimeout(() => scrollToBottom(), 100);
       setNewRecommendation("");
     } catch (err) {
+      toast.error(err.message || "Une erreur s'est produite.");
       console.error("Erreur lors de l'ajout de la recommandation :", err.message);
     }
   };
+  
 
   const handleDeleteRecommendation = async (id) => {
     try {
@@ -140,26 +182,26 @@ const ShowCV = () => {
           credentials: "include",
         }
       );
-
+  
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Erreur API :", errorData);
-        throw new Error(
-          errorData.message || "Erreur lors de la suppression de la recommandation"
-        );
+        throw new Error(errorData.message || "Erreur lors de la suppression.");
       }
-
+  
       setRecommendations((prev) => prev.filter((rec) => rec._id !== id));
+      toast.success("Recommandation supprimée avec succès !");
     } catch (err) {
-      console.error(
-        "Erreur lors de la suppression de la recommandation :",
-        err.message
-      );
+      toast.error(err.message || "Une erreur s'est produite.");
+      console.error("Erreur lors de la suppression de la recommandation :", err.message);
     }
   };
+  
+
 
   return (
+
     <div className="container mx-auto px-6 py-8 flex flex-col md:flex-row gap-6">
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="flex-1">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">Profil CV</h1>
@@ -254,60 +296,106 @@ const ShowCV = () => {
         )}
       </div>
 
+      {/* Bloc Recommandations */}
       <div className="w-full md:w-1/4 bg-white shadow-lg rounded-lg p-4 flex flex-col">
         <h2 className="text-xl font-bold mb-4">Recommandations</h2>
         <div
+          id="recommendations-container"
+          ref={recommendationsContainerRef}
           className="flex-1 overflow-y-auto"
           style={{
             maxHeight: "600px",
           }}
         >
-          {recommendations.map((rec) => {
-            const isToday =
-              new Date(rec.createdAt).toDateString() ===
-              new Date().toDateString();
-            const displayDate = isToday
-              ? new Date(rec.createdAt).toLocaleTimeString("fr-FR", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
-              : new Date(rec.createdAt).toLocaleDateString("fr-FR", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                });
+        {recommendations.map((rec) => {
+          const isToday =
+            new Date(rec.createdAt).toDateString() === new Date().toDateString();
+          const displayDate = isToday
+            ? new Date(rec.createdAt).toLocaleTimeString("fr-FR", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            : new Date(rec.createdAt).toLocaleDateString("fr-FR", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              });
 
-            const firstname = rec.userID?.firstname || "Utilisateur";
-            const lastname = rec.userID?.lastname || "Inconnu";
+          const firstname = rec.userID?.firstname || "Utilisateur";
+          const lastname = rec.userID?.lastname || "Inconnu";
 
-            return (
-              <Card
-                key={rec._id}
-                className="bg-white shadow-sm border border-gray-200 p-4 rounded-lg"
-              >
-                <div className="flex items-start gap-4">
-                  <Avatar
-                    name={`${firstname} ${lastname}`}
-                    size="md"
-                    color="primary"
-                    isBordered
-                  />
-                  <div className="flex-1">
-                    <p className="font-semibold text-lg">{`${firstname} ${lastname}`}</p>
+          return (
+            <Card
+              key={rec._id}
+              className="bg-white shadow-sm border border-gray-200 p-4 rounded-lg relative"
+            >
+              <div className="flex items-start gap-4">
+                <Avatar
+                  name={`${firstname} ${lastname}`}
+                  size="md"
+                  color="primary"
+                  isBordered
+                />
+                <div className="flex-1">
+                  <p className="font-semibold text-lg">{`${firstname} ${lastname}`}</p>
+                  {editingRecommendation === rec._id ? (
+                    <form
+                      onSubmit={(e) => {
+                        handleEditRecommendation(e, rec._id);
+                      }}
+                    >
+                      <Textarea
+                        value={rec.text}
+                        onChange={(e) =>
+                          setRecommendations((prev) =>
+                            prev.map((r) =>
+                              r._id === rec._id ? { ...r, text: e.target.value } : r
+                            )
+                          )
+                        }
+                        rows={3}
+                        className="w-full"
+                      />
+                      <div className="mt-2 flex gap-2">
+                        <Button type="submit" size="sm" color="primary">
+                          Sauvegarder
+                        </Button>
+                        <Button
+                          size="sm"
+                          color="default"
+                          onClick={() => setEditingRecommendation(null)}
+                        >
+                          Annuler
+                        </Button>
+                      </div>
+                    </form>
+                  ) : (
                     <p className="text-sm text-gray-600 mt-1">{rec.text}</p>
-                  </div>
-                  <div className="text-xs text-gray-400">{displayDate}</div>
+                  )}
+                </div>
+                <div className="text-xs text-gray-400 absolute top-2 right-2">
+                  {displayDate}
+                </div>
+              </div>
+              {/* Montrer l'icône de suppression uniquement si l'utilisateur est le propriétaire du CV */}
+              {(isOwner || String(user?.userid) === String(rec.userID?._id)) && (
+                <div className="absolute bottom-2 right-2 flex gap-2">
+                  <TrashIcon
+                    className="h-4 w-4 text-red-500 cursor-pointer" // Icône plus petite
+                    onClick={() => handleDeleteRecommendation(rec._id)}
+                  />
                   {String(user?.userid) === String(rec.userID?._id) && (
-                    <TrashIcon
-                      className="h-5 w-5 text-red-500 cursor-pointer"
-                      onClick={() => handleDeleteRecommendation(rec._id)}
+                    <PencilIcon
+                      className="h-4 w-4 text-gray-500 cursor-pointer" // Icône plus petite
+                      onClick={() => setEditingRecommendation(rec._id)}
                     />
                   )}
                 </div>
-              </Card>
-            );
-          })}
-          <div ref={recommendationsEndRef}></div>
+              )}
+            </Card>
+          );
+        })}
+
         </div>
 
         <Divider className="my-4" />
