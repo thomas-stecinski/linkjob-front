@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { BACKEND_URL } from '../config/config';
-import { useAuth } from '../context/AuthContext';
+import React, { useState, useEffect } from "react";
+import { BACKEND_URL } from "../config/config";
+import { useAuth } from "../context/AuthContext";
 import {
   Dropdown,
   DropdownTrigger,
@@ -8,30 +8,67 @@ import {
   DropdownItem,
   Avatar,
   Button,
-} from '@nextui-org/react';
-import { UserIcon } from '@heroicons/react/24/solid';
-import { useNavigate, Link } from 'react-router-dom';
+} from "@nextui-org/react";
+import { UserIcon } from "@heroicons/react/24/solid";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Navbar() {
-  const { user, hasCV, setUser } = useAuth();
+  const { user, setUser } = useAuth();
   const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // État pour gérer le menu mobile
+  const [hasCV, setHasCV] = useState(false); // État pour savoir si l'utilisateur a un CV
+  const [isLoadingCV, setIsLoadingCV] = useState(true); // État pour suivre le chargement du CV
 
+  // Vérification de la présence d'un CV à chaque chargement ou changement d'utilisateur
+  useEffect(() => {
+    const fetchCVStatus = async () => {
+      if (!user?.userid) {
+        setHasCV(false);
+        setIsLoadingCV(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/cv/check/${user.userid}`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          console.error(`Erreur API : ${response.statusText}`);
+          setHasCV(false);
+          setIsLoadingCV(false);
+          return;
+        }
+
+        const data = await response.json();
+        setHasCV(data.hasCV || false);
+      } catch (error) {
+        console.error("Erreur lors de la vérification du CV :", error.message);
+      } finally {
+        setIsLoadingCV(false);
+      }
+    };
+
+    fetchCVStatus();
+  }, [user]);
+
+  // Gestion de la déconnexion
   const handleLogout = async () => {
     try {
       const response = await fetch(`${BACKEND_URL}/api/auth/logout`, {
-        method: 'POST',
-        credentials: 'include',
+        method: "POST",
+        credentials: "include",
       });
 
       if (!response.ok) {
-        throw new Error('Échec lors de la déconnexion');
+        throw new Error("Échec lors de la déconnexion");
       }
 
       setUser(null);
-      navigate('/login');
+      navigate("/login");
     } catch (error) {
-      console.error('Erreur lors de la déconnexion :', error.message);
+      console.error("Erreur lors de la déconnexion :", error.message);
     }
   };
 
@@ -43,7 +80,7 @@ export default function Navbar() {
           <Link to="/">LinkJob</Link>
         </div>
 
-        {/* Hamburger Icon */}
+        {/* Hamburger Icon (Mobile) */}
         <div className="md:hidden flex items-center">
           <button
             className="text-white"
@@ -57,17 +94,21 @@ export default function Navbar() {
               className="w-6 h-6"
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 d="M4 6h16M4 12h16M4 18h16"
               />
             </svg>
           </button>
         </div>
 
-        {/* Navigation Links (for larger screens) */}
-        <div className={`md:flex items-center justify-center flex-1 space-x-4 ${isMenuOpen ? 'block' : 'hidden'}`}>
+        {/* Navigation Links */}
+        <div
+          className={`md:flex items-center justify-center flex-1 space-x-4 ${
+            isMenuOpen ? "block" : "hidden"
+          }`}
+        >
           <Button
             as={Link}
             to="/news"
@@ -99,13 +140,25 @@ export default function Navbar() {
               </Button>
             </DropdownTrigger>
             <DropdownMenu>
-              {/* Always display both options */}
-              <DropdownItem key="view-cv" onPress={() => navigate(`/cv/${user?.userid}`)}>
-                Voir mon CV
-              </DropdownItem>
-              <DropdownItem key="create-cv" onPress={() => navigate('/create-cv')}>
-                Créer mon CV
-              </DropdownItem>
+              {isLoadingCV ? (
+                <DropdownItem key="loading" disabled>
+                  Chargement...
+                </DropdownItem>
+              ) : hasCV ? (
+                <DropdownItem
+                  key="view-cv"
+                  onPress={() => navigate(`/cv/${user?.userid}`)}
+                >
+                  Voir mon CV
+                </DropdownItem>
+              ) : (
+                <DropdownItem
+                  key="create-cv"
+                  onPress={() => navigate("/create-cv")}
+                >
+                  Créer mon CV
+                </DropdownItem>
+              )}
             </DropdownMenu>
           </Dropdown>
         </div>
@@ -120,10 +173,14 @@ export default function Navbar() {
                     {user.firstname} {user.lastname}
                   </span>
                   <Avatar
-                    src={user.avatar || ''}
+                    src={user.avatar || ""}
                     alt="Profile"
                     className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center"
-                    icon={!user.avatar && <UserIcon className="h-5 w-5 text-gray-600" />}
+                    icon={
+                      !user.avatar && (
+                        <UserIcon className="h-5 w-5 text-gray-600" />
+                      )
+                    }
                   />
                 </div>
               </DropdownTrigger>
