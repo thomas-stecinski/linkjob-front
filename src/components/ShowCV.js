@@ -106,6 +106,8 @@ const ShowCV = () => {
   
     const updatedText = recommendations.find((rec) => rec._id === id)?.text;
   
+    console.log("Données envoyées :", { id, text: updatedText });
+  
     if (!updatedText.trim()) {
       toast.error("Veuillez saisir un texte valide.");
       return;
@@ -114,7 +116,10 @@ const ShowCV = () => {
     try {
       const response = await fetch(`${BACKEND_URL}/api/recommendation/edit/${id}`, {
         method: "PUT",
-        headers: headers,
+        headers: {
+          "Content-Type": "application/json",
+          ...headers,
+        },
         body: JSON.stringify({ text: updatedText }),
       });
   
@@ -138,7 +143,6 @@ const ShowCV = () => {
   };
   
   
-
   const handleAddRecommendation = async (e) => {
     e.preventDefault();
   
@@ -147,12 +151,20 @@ const ShowCV = () => {
       return;
     }
   
+    console.log("Payload:", {
+      text: newRecommendation,
+      cvid: requestedUserid, // Vérifiez que cette variable est bien définie
+    });
+  
     try {
       const response = await fetch(
         `${BACKEND_URL}/api/recommendation/add-recommendation`,
         {
           method: "POST",
-          headers: headers,
+          headers: {
+            "Content-Type": "application/json",
+            ...headers,
+          },
           body: JSON.stringify({
             text: newRecommendation,
             cvid: requestedUserid,
@@ -175,6 +187,7 @@ const ShowCV = () => {
       console.error("Erreur lors de l'ajout de la recommandation :", err.message);
     }
   };
+  
   
 
   const handleDeleteRecommendation = async (id) => {
