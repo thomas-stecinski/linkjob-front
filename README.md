@@ -68,3 +68,43 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## Routes disponibles
+
+### Connexion : 
+```bash
+<your name domain>/login
+```
+Inscription: 
+```bash
+<your name domain>/register
+```
+### Routes protégées: 
+
+Pour atteindre les routes suivantes il faut-être inscris et connécté.
+
+Page accueil: 
+```bash
+<your name domain>/
+```
+
+Page CVs: 
+```bash
+<your name domain>/cv
+```
+
+Page CVs de l'utilisateur (connécté): 
+```bash
+<your name domain>/cv/:userid
+```
+
+Page de création de CV: 
+```bash
+<your name domain>/create-cv
+```
+
+Page d'édition de CV: 
+```bash
+<your name domain>/edit-cv/:userid
+```
+
