@@ -9,11 +9,20 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
     const fetchUserData = async () => {
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+
       try {
         const response = await fetch(`${BACKEND_URL}/api/auth/me`, {
           method: 'GET',
-          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
         });
 
         if (!response.ok) {
@@ -23,14 +32,19 @@ export const AuthProvider = ({ children }) => {
         const data = await response.json();
         setUser(data.user);
         
-        // Fetch CV status along with user data
         if (data.user) {
-          const cvResponse = await fetch(`${BACKEND_URL}/api/cv/get-cv/${data.user.userid}`, {
-            credentials: 'include'
-          });
+          const cvResponse = await fetch(
+            `${BACKEND_URL}/api/cv/get-cv/${data.user.userid}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            }
+          );
           setHasCV(cvResponse.ok);
         }
       } catch (error) {
+        localStorage.removeItem('token');
         setUser(null);
         setHasCV(false);
       } finally {

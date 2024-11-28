@@ -20,6 +20,13 @@ export default function CreateCV() {
   const [status, setStatus] = useState('public');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const token = localStorage.getItem('token');
+  const headers = token ? {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'  
+  } : {
+    'Content-Type': 'application/json'
+  };
 
   useEffect(() => {
     if (user) {
@@ -81,10 +88,7 @@ export default function CreateCV() {
     try {
         const response = await fetch(`${BACKEND_URL}/api/cv/create-cv`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include', // Inclut les cookies dans la requête
+            headers: headers,
             body: JSON.stringify({
                 firstname,
                 lastname,

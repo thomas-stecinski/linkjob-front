@@ -3,12 +3,13 @@ import { useAuth } from '../context/AuthContext';
 
 export const ProtectedRoute = ({ children }) => {
     const { user, loading } = useAuth();
+    const token = localStorage.getItem('token');
 
     if (loading) {
-        return <div>Loading...</div>; // Affiche un écran de chargement
+        return <div>Loading...</div>; 
     }
 
-    if (!user) {
+    if (!token) {
         return <Navigate to="/login" replace />;
     }
 

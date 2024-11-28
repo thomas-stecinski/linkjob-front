@@ -10,7 +10,6 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { setUser } = useAuth();
-
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -25,21 +24,19 @@ export default function Login() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
-        credentials: 'include',
-        mode: 'cors',
       });
   
+      const data = await response.json();
+      
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Login failed');
+        throw new Error(data.message || 'Login failed');
       }
   
-      const data = await response.json();
-  
-      // Met à jour l'état utilisateur
+      localStorage.setItem('token', data.token);
+      
       setUser(data.user);
   
-      navigate('/'); // Redirige vers la page d'accueil
+      navigate('/'); 
     } catch (err) {
       console.error('Error during login:', err.message);
       setError(err.message);
@@ -51,7 +48,7 @@ export default function Login() {
   
 
   const handleSignUpRedirect = () => {
-    navigate('/register'); // Redirection vers la page d'inscription
+    navigate('/register'); 
   };
 
   return (

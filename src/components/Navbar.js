@@ -15,11 +15,17 @@ import { useNavigate, Link } from "react-router-dom";
 export default function Navbar() {
   const { user, setUser } = useAuth();
   const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // État pour gérer le menu mobile
-  const [hasCV, setHasCV] = useState(false); // État pour savoir si l'utilisateur a un CV
-  const [isLoadingCV, setIsLoadingCV] = useState(true); // État pour suivre le chargement du CV
+  const [isMenuOpen, setIsMenuOpen] = useState(false); 
+  const [hasCV, setHasCV] = useState(false); 
+  const [isLoadingCV, setIsLoadingCV] = useState(true); 
+  const token = localStorage.getItem('token');
+  const headers = token ? {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'  
+  } : {
+    'Content-Type': 'application/json'
+  };
 
-  // Vérification de la présence d'un CV à chaque chargement ou changement d'utilisateur
   useEffect(() => {
     const fetchCVStatus = async () => {
       if (!user?.userid) {
@@ -31,7 +37,7 @@ export default function Navbar() {
       try {
         const response = await fetch(`${BACKEND_URL}/api/cv/check/${user.userid}`, {
           method: "GET",
-          credentials: "include",
+          headers: headers,
         });
 
         if (!response.ok) {
@@ -58,7 +64,7 @@ export default function Navbar() {
     try {
       const response = await fetch(`${BACKEND_URL}/api/auth/logout`, {
         method: "POST",
-        credentials: "include",
+        headers: headers,
       });
 
       if (!response.ok) {

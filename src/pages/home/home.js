@@ -7,9 +7,16 @@ import { useAuth } from "../../context/AuthContext";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { user } = useAuth(); // Récupérer l'utilisateur connecté
-  const [hasCV, setHasCV] = useState(false); // État pour vérifier si l'utilisateur a un CV
-  const [isLoading, setIsLoading] = useState(true); // État de chargement
+  const { user } = useAuth(); 
+  const [hasCV, setHasCV] = useState(false); 
+  const [isLoading, setIsLoading] = useState(true); 
+  const token = localStorage.getItem('token');
+  const headers = token ? {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'  
+  } : {
+    'Content-Type': 'application/json'
+  };
 
   useEffect(() => {
     const fetchCVStatus = async () => {
@@ -22,7 +29,7 @@ export default function Home() {
       try {
         const response = await fetch(`${BACKEND_URL}/api/cv/check/${user.userid}`, {
           method: "GET",
-          credentials: "include",
+          headers: headers,
         });
 
         if (!response.ok) {
@@ -46,14 +53,14 @@ export default function Home() {
 
   const handleGetStarted = () => {
     if (!user) {
-      navigate("/login"); // Rediriger vers la connexion si non connecté
+      navigate("/login"); 
       return;
     }
 
     if (hasCV) {
-      navigate(`/cv/${user.userid}`); // Rediriger vers le CV existant
+      navigate(`/cv/${user.userid}`); 
     } else {
-      navigate("/create-cv"); // Rediriger vers la création de CV
+      navigate("/create-cv"); 
     }
   };
 
@@ -86,7 +93,7 @@ export default function Home() {
                 variant="bordered"
                 className="text-blue-500 border-blue-500"
                 onClick={handleGetStarted}
-                disabled={isLoading} // Désactiver le bouton pendant le chargement
+                disabled={isLoading} 
               >
                 {isLoading ? "Chargement..." : "Se lancer"}
               </Button>

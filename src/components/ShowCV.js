@@ -35,17 +35,23 @@ const ShowCV = () => {
   const { user } = useAuth();
   const userid = user?.userid;
   const requestedUserid = useParams().userid;
-  const recommendationsContainerRef = useRef(null); // Ref pour le conteneur
+  const recommendationsContainerRef = useRef(null);
   const [editingRecommendation, setEditingRecommendation] = useState(null);
+  const isOwner = userid === requestedUserid;
+  const headers = {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`
+  };
 
-  const isOwner = userid === cv?.userid;
 
   useEffect(() => {
+    console.log('Fetching CV for user:', requestedUserid);
+    console.log('User ID:', userid);
+    console.log('Is owner:', isOwner);
     const fetchCV = async () => {
       try {
         const response = await fetch(
           `${BACKEND_URL}/api/cv/get-cv/${requestedUserid}`,
-          { credentials: "include" }
+          { headers }
         );
         if (!response.ok) {
           throw new Error("Impossible de récupérer le CV");
@@ -63,7 +69,7 @@ const ShowCV = () => {
       try {
         const response = await fetch(
           `${BACKEND_URL}/api/recommendation/${requestedUserid}/recommendations`,
-          { credentials: "include" }
+          { headers }
         );
         if (!response.ok) {
           throw new Error("Impossible de récupérer les recommandations");
@@ -108,8 +114,7 @@ const ShowCV = () => {
     try {
       const response = await fetch(`${BACKEND_URL}/api/recommendation/edit/${id}`, {
         method: "PUT",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
+        headers: headers,
         body: JSON.stringify({ text: updatedText }),
       });
   
@@ -147,8 +152,7 @@ const ShowCV = () => {
         `${BACKEND_URL}/api/recommendation/add-recommendation`,
         {
           method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
+          headers: headers,
           body: JSON.stringify({
             text: newRecommendation,
             cvid: requestedUserid,
@@ -179,7 +183,7 @@ const ShowCV = () => {
         `${BACKEND_URL}/api/recommendation/delete/${id}`,
         {
           method: "DELETE",
-          credentials: "include",
+          headers: headers,
         }
       );
   

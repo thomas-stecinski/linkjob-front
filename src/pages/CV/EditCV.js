@@ -25,6 +25,13 @@ export default function EditCV() {
   });
   const userid = user.userid;
   const [loading, setLoading] = useState(true);
+  const token = localStorage.getItem('token');
+  const headers = token ? {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'  
+  } : {
+    'Content-Type': 'application/json'
+  };
 
   useEffect(() => {
    
@@ -33,7 +40,7 @@ export default function EditCV() {
         const response = await fetch(
           `${BACKEND_URL}/api/cv/get-cv/${userid}`,
           {
-            credentials: 'include',
+            headers: headers,
           }
         );
         const data = await response.json();
@@ -142,10 +149,7 @@ export default function EditCV() {
           `${BACKEND_URL}/api/cv/update-cv`,
           {
             method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            credentials: 'include',
+            headers: headers,
             body: JSON.stringify(updateData)
           }
         );
@@ -156,7 +160,7 @@ export default function EditCV() {
           navigate(`/cv/${userid}`);
         } else {
           toast.error(data.message || 'Failed to update CV');
-          console.error('Update error:', data.error); // Debug log
+          console.error('Update error:', data.error); 
         }
       } catch (err) {
         toast.error('Failed to update CV');

@@ -23,23 +23,24 @@ const MotionCard = motion(Card);
 
 export default function ViewCVs() {
   const [cvs, setCvs] = useState([]);
-  const [filteredCvs, setFilteredCvs] = useState([]); // Pour les résultats filtrés
+  const [filteredCvs, setFilteredCvs] = useState([]); 
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState(""); // Requête de recherche
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  // Récupérer les CVs
   useEffect(() => {
     const fetchCVs = async () => {
       try {
         const response = await fetch(`${BACKEND_URL}/api/cv/get-cv`, {
-          credentials: "include",
-        });
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        })
         const data = await response.json();
         if (data.success) {
           setCvs(data.data);
-          setFilteredCvs(data.data); // Initialisation
+          setFilteredCvs(data.data); 
         }
       } catch (error) {
         console.error("Error fetching CVs:", error);
