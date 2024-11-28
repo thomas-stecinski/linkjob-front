@@ -1,5 +1,11 @@
 # Démarrer le projet react (front)
 
+## Initialisation
+
+1. Assurez-vous d'avoir les dernières versions de **Node.js**, **npm**, **React**.
+2. Installez les dépendances nécessaires au projet avec :
+   ```bash
+   npm install
 
 ## Scripts disponibles
 
