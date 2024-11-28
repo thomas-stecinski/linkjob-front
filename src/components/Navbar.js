@@ -111,19 +111,11 @@ export default function Navbar() {
         >
           <Button
             as={Link}
-            to="/news"
+            to="/"
             variant="light"
             className="text-white w-[120px]"
           >
-            Actualités
-          </Button>
-          <Button
-            as={Link}
-            to="/offers"
-            variant="light"
-            className="text-white w-[120px]"
-          >
-            Offres
+            Accueil
           </Button>
           <Button
             as={Link}

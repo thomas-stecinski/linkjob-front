@@ -74,7 +74,7 @@ export default function Login() {
             onChange={(e) => setEmail(e.target.value)}
           />
           <Input
-            label="Password"
+            label="Mot de passe"
             type="password"
             placeholder="Entrez votre mot de passe"
             variant="bordered"
@@ -82,13 +82,6 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
           {error && <p className="text-red-500 text-sm">{error}</p>}
-          <div className="flex justify-between items-center">
-            <label className="text-sm">
-              <input type="checkbox" className="mr-2" />
-              Se souvenir de moi
-            </label>
-            <a href="#" className="text-sm text-primary">Mot de passe oublié?</a>
-          </div>
         </CardBody>
         <CardFooter className="flex flex-col gap-3">
           <Button
@@ -101,7 +94,7 @@ export default function Login() {
             Se connecter
           </Button>
           <div className="text-center text-sm">
-            Don't have an account?{' '}
+            Vous n'avez pas de compte ?{' '}
             <a onClick={handleSignUpRedirect} className="text-primary cursor-pointer">
               S'inscrire
             </a>
