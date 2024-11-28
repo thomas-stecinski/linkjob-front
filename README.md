@@ -1,10 +1,9 @@
-# Getting Started with Create React App
+# Démarrer le projet react (front)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Scripts disponibles
 
-In the project directory, you can run:
+Dans le répertoire du projet, vous pouvez exécuter :
 ### Start le projet
 ```bash
 `npm test`
