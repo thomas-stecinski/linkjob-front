@@ -95,9 +95,9 @@ export default function CreateCV() {
                 title,
                 location,
                 summary,
-                education, // Devrait être un tableau d'objets
-                experiences, // Devrait être un tableau d'objets
-                hobbies, // Devrait être un tableau de chaînes
+                education, 
+                experiences, 
+                hobbies, 
                 userid: user?.userid,
                 status_label: status,
             }),

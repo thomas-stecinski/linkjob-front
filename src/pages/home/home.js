@@ -66,10 +66,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Navbar */}
       <Navbar />
-
-      {/* Hero Section */}
       <div className="container mx-auto px-6 py-16">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
           <div className="lg:w-1/2 text-gray-800">
@@ -82,12 +79,9 @@ export default function Home() {
               à vos ambitions.
             </p>
             <div className="flex gap-4">
-              {/* Redirection vers la page des CVs */}
               <Button size="lg" color="primary" variant="shadow" onClick={() => navigate("/cv")}>
                 Commencer à rechercher
               </Button>
-
-              {/* Logique conditionnelle pour "Se lancer" */}
               <Button
                 size="lg"
                 variant="bordered"

@@ -81,7 +81,6 @@ export default function Navbar() {
   return (
     <nav className="bg-gray-800 backdrop-blur-md sticky top-0 z-50 w-full">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        {/* Logo */}
         <div className="text-xl font-bold text-white w-[200px]">
           <Link to="/">LinkJob</Link>
         </div>

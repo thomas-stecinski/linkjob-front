@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
 
-// Wrap Card with motion
+// Wrap Card avec motion
 const MotionCard = motion(Card);
 
 export default function ViewCVs() {
