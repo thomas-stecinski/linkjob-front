@@ -15,9 +15,9 @@ import { useNavigate, Link } from "react-router-dom";
 export default function Navbar() {
   const { user, setUser } = useAuth();
   const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // État pour gérer le menu mobile
-  const [hasCV, setHasCV] = useState(false); // État pour savoir si l'utilisateur a un CV
-  const [isLoadingCV, setIsLoadingCV] = useState(true); // État pour suivre le chargement du CV
+  const [isMenuOpen, setIsMenuOpen] = useState(false); 
+  const [hasCV, setHasCV] = useState(false); 
+  const [isLoadingCV, setIsLoadingCV] = useState(true);
 
   // Vérification de la présence d'un CV à chaque chargement ou changement d'utilisateur
   useEffect(() => {
@@ -75,7 +75,6 @@ export default function Navbar() {
   return (
     <nav className="bg-gray-800 backdrop-blur-md sticky top-0 z-50 w-full">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        {/* Logo */}
         <div className="text-xl font-bold text-white w-[200px]">
           <Link to="/">LinkJob</Link>
         </div>

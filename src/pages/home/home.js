@@ -7,9 +7,9 @@ import { useAuth } from "../../context/AuthContext";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { user } = useAuth(); // Récupérer l'utilisateur connecté
-  const [hasCV, setHasCV] = useState(false); // État pour vérifier si l'utilisateur a un CV
-  const [isLoading, setIsLoading] = useState(true); // État de chargement
+  const { user } = useAuth(); 
+  const [hasCV, setHasCV] = useState(false); 
+  const [isLoading, setIsLoading] = useState(true); 
 
   useEffect(() => {
     const fetchCVStatus = async () => {
@@ -59,10 +59,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Navbar */}
       <Navbar />
-
-      {/* Hero Section */}
       <div className="container mx-auto px-6 py-16">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
           <div className="lg:w-1/2 text-gray-800">
@@ -75,19 +72,15 @@ export default function Home() {
               à vos ambitions.
             </p>
             <div className="flex gap-4">
-              {/* Redirection vers la page des CVs */}
               <Button size="lg" color="primary" variant="shadow" onClick={() => navigate("/cv")}>
                 Commencer à rechercher
               </Button>
-
-              {/* Logique conditionnelle pour "Se lancer" */}
               <Button
                 size="lg"
                 variant="bordered"
                 className="text-blue-500 border-blue-500"
                 onClick={handleGetStarted}
-                disabled={isLoading} // Désactiver le bouton pendant le chargement
-              >
+                disabled={isLoading}>
                 {isLoading ? "Chargement..." : "Se lancer"}
               </Button>
             </div>

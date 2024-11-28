@@ -18,14 +18,14 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
 
-// Wrap Card with motion
+// Wrap Card avec motion
 const MotionCard = motion(Card);
 
 export default function ViewCVs() {
   const [cvs, setCvs] = useState([]);
-  const [filteredCvs, setFilteredCvs] = useState([]); // Pour les résultats filtrés
+  const [filteredCvs, setFilteredCvs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState(""); // Requête de recherche
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -39,7 +39,7 @@ export default function ViewCVs() {
         const data = await response.json();
         if (data.success) {
           setCvs(data.data);
-          setFilteredCvs(data.data); // Initialisation
+          setFilteredCvs(data.data);
         }
       } catch (error) {
         console.error("Error fetching CVs:", error);

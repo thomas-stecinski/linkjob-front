@@ -8,7 +8,7 @@ import {
   CardFooter,
   Divider,
 } from '@nextui-org/react';
-import { useNavigate } from 'react-router-dom'; // Utilisation de useNavigate pour la redirection
+import { useNavigate } from 'react-router-dom'; 
 import { BACKEND_URL } from '../../config/config';
 
 export default function Register() {
@@ -19,7 +19,7 @@ export default function Register() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate(); // Initialisation de useNavigate
+  const navigate = useNavigate(); 
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -27,7 +27,7 @@ export default function Register() {
     setLoading(true);
 
     try {
-      // Appel à l'API pour l'inscription (elle gère aussi la connexion automatique)
+      // Appel à l'API pour l'inscription
       const response = await fetch(`${BACKEND_URL}/api/auth/register`, {
         method: 'POST',
         headers: {

@@ -23,7 +23,6 @@ export const AuthProvider = ({ children }) => {
         const data = await response.json();
         setUser(data.user);
         
-        // Fetch CV status along with user data
         if (data.user) {
           const cvResponse = await fetch(`${BACKEND_URL}/api/cv/get-cv/${data.user.userid}`, {
             credentials: 'include'

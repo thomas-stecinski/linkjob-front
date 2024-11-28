@@ -7,8 +7,6 @@ import Register from '../pages/authentification/register';
 import ViewCVs from '../pages/CV/ViewCVs'; 
 import GetCV from '../pages/CV/GetCV'; 
 import CreateCV from '../pages/CV/CreateCV'; 
-// import Offers from '../pages/offers/Offers';
-// import News from '../pages/news/News'; 
 import EditCV from '../pages/CV/EditCV';
 
 export default function AppRoutes() {
@@ -61,22 +59,6 @@ export default function AppRoutes() {
               </ProtectedRoute>
             }
           />
-          {/* <Route
-            path="/offers"
-            element={
-              <ProtectedRoute>
-                <Offers />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/news"
-            element={
-              <ProtectedRoute>
-                <News />
-              </ProtectedRoute>
-            }
-          /> */}
         </Routes>
       </Router>
     </AuthProvider>

@@ -35,7 +35,7 @@ const ShowCV = () => {
   const { user } = useAuth();
   const userid = user?.userid;
   const requestedUserid = useParams().userid;
-  const recommendationsContainerRef = useRef(null); // Ref pour le conteneur
+  const recommendationsContainerRef = useRef(null); 
   const [editingRecommendation, setEditingRecommendation] = useState(null);
 
   const isOwner = userid === cv?.userid;
@@ -377,16 +377,16 @@ const ShowCV = () => {
                   {displayDate}
                 </div>
               </div>
-              {/* Montrer l'icône de suppression uniquement si l'utilisateur est le propriétaire du CV */}
+              {/* icône de suppression uniquement si l'utilisateur est le propriétaire du CV */}
               {(isOwner || String(user?.userid) === String(rec.userID?._id)) && (
                 <div className="absolute bottom-2 right-2 flex gap-2">
                   <TrashIcon
-                    className="h-4 w-4 text-red-500 cursor-pointer" // Icône plus petite
+                    className="h-4 w-4 text-red-500 cursor-pointer" 
                     onClick={() => handleDeleteRecommendation(rec._id)}
                   />
                   {String(user?.userid) === String(rec.userID?._id) && (
                     <PencilIcon
-                      className="h-4 w-4 text-gray-500 cursor-pointer" // Icône plus petite
+                      className="h-4 w-4 text-gray-500 cursor-pointer" 
                       onClick={() => setEditingRecommendation(rec._id)}
                     />
                   )}

@@ -156,7 +156,7 @@ export default function EditCV() {
           navigate(`/cv/${userid}`);
         } else {
           toast.error(data.message || 'Failed to update CV');
-          console.error('Update error:', data.error); // Debug log
+          console.error('Update error:', data.error); 
         }
       } catch (err) {
         toast.error('Failed to update CV');
@@ -175,7 +175,7 @@ export default function EditCV() {
         <form onSubmit={handleSubmit}>
           {loading ? (
             <>
-              {/* Header Section Skeleton */}
+              {/* Header Section*/}
               <Card className="mb-8">
                 <CardHeader className="flex gap-6 p-6">
                   <Skeleton className="rounded-full w-24 h-24" />
@@ -192,7 +192,7 @@ export default function EditCV() {
               </Card>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Education Section Skeleton */}
+                {/* Education Section*/}
                 <Card>
                   <CardHeader className="flex justify-between p-6">
                     <div className="flex gap-3">
@@ -219,7 +219,7 @@ export default function EditCV() {
                   </CardBody>
                 </Card>
 
-                {/* Experience Section Skeleton */}
+                {/* Experience Section*/}
                 <Card>
                   <CardHeader className="flex justify-between p-6">
                     <div className="flex gap-3">
@@ -247,7 +247,7 @@ export default function EditCV() {
                 </Card>
               </div>
 
-              {/* Hobbies Section Skeleton */}
+              {/* Hobbies Section*/}
               <Card className="mt-8">
                 <CardHeader className="flex justify-between p-6">
                   <div className="flex gap-3">
